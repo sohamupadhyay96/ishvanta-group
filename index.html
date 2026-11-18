@@ -201,11 +201,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <button role="tab" id="t-finance" aria-selected="false">Finance</button>
     </div>
     <div id="f">
-      <div class="row"><div class="field"><label for="n">Name</label><input id="n" autocomplete="name"></div>
-      <div class="field"><label for="p">Phone</label><input id="p" type="tel" autocomplete="tel"></div></div>
+      <div class="row"><div class="field"><label for="n">Name</label><input id="n" autocomplete="name" required></div>
+      <div class="field"><label for="e">Email</label><input id="e" type="email" autocomplete="email" required></div></div>
+      <div class="field"><label for="p">Phone</label><input id="p" type="tel" autocomplete="tel"></div>
       <div class="field"><label for="s">I need help with</label><select id="s"></select></div>
       <div class="field"><label for="m">Details</label><textarea id="m" placeholder="Location, budget, timeline"></textarea></div>
-      <button class="btn" id="send" type="button">Send on WhatsApp</button>
+      <button class="btn" id="send" type="button">Send Email Enquiry</button>
       <p id="msg" role="status"></p>
     </div>
   </div>
@@ -214,7 +215,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <footer><div class="wrap"><span>ISHVANTA GROUP. Real Estate &amp; Finance.</span><span>Ahmedabad, Gujarat</span></div></footer>
 
 <script>
-var PHONE=""; // add WhatsApp number with country code, e.g. 919XXXXXXXXX
+var BUSINESS_EMAIL="info@ishvantagroup.com";
 var opts={
   property:["Buy a property","Sell a property","Lease an office","Industrial property","Land","Property investment","Property management"],
   finance:["Startup fundraising","Investor connections","Business loan","Working capital","MSME finance","Property-backed finance","Home loan","Commercial property loan"]
@@ -230,11 +231,12 @@ document.getElementById("t-property").onclick=function(){setTab("property")};
 document.getElementById("t-finance").onclick=function(){setTab("finance")};
 document.querySelectorAll("[data-tab]").forEach(function(a){a.addEventListener("click",function(){setTab(a.dataset.tab)})});
 document.getElementById("send").onclick=function(){
-  var m=document.getElementById("msg"),n=document.getElementById("n").value.trim(),p=document.getElementById("p").value.trim();
-  if(!n||!p){m.textContent="Add your name and phone so we can reply.";return}
-  var txt="ISHVANTA "+tab+" enquiry%0AName: "+encodeURIComponent(n)+"%0APhone: "+encodeURIComponent(p)+"%0ANeed: "+encodeURIComponent(sel.value)+"%0ADetails: "+encodeURIComponent(document.getElementById("m").value);
-  if(!PHONE){m.textContent="Thanks, "+n+". Your enquiry is ready; WhatsApp number is not set yet on this preview.";return}
-  m.textContent="Opening WhatsApp...";window.open("https://wa.me/"+PHONE+"?text="+txt,"_blank","noopener");
+  var m=document.getElementById("msg"),n=document.getElementById("n").value.trim(),e=document.getElementById("e").value.trim(),p=document.getElementById("p").value.trim(),details=document.getElementById("m").value.trim();
+  if(!n||!e||!p){m.textContent="Please add your name, email and phone number.";return}
+  var subject=encodeURIComponent("ISHVANTA "+tab+" enquiry — "+sel.value);
+  var body=encodeURIComponent("ISHVANTA GROUP enquiry\n\nType: "+tab+"\nName: "+n+"\nEmail: "+e+"\nPhone: "+p+"\nNeed: "+sel.value+"\nDetails: "+details);
+  m.textContent="Opening your email app to send the enquiry...";
+  window.location.href="mailto:"+BUSINESS_EMAIL+"?subject="+subject+"&body="+body;
 };
 var mb=document.querySelector(".menu"),lk=document.getElementById("links");
 mb.onclick=function(){var o=lk.classList.toggle("open");mb.setAttribute("aria-expanded",o)};
